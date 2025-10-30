@@ -10,7 +10,7 @@ app.use(cors());
 app.use(express.json());
 
 app.get("/", (req, res) => {
-  res.json({ message: "后端服务运行正常!" });
+  res.json({ message: "后端服务运行正常!111" });
 });
 
 // 注册活动相关路由
