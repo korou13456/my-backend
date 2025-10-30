@@ -22,6 +22,6 @@ router.get("/get-store-list", getStoreList);
 router.post("/create-room", createRoom);
 
 // 测试
-router.post("/aa", aa);
+router.get("/aa", aa);
 
 module.exports = router;
