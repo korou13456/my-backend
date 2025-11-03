@@ -69,9 +69,10 @@ const enterRoom = async (req, res) => {
       [JSON.stringify(participants), tableId]
     );
 
-    await connection.execute("UPDATE users SET status = 1 WHERE user_id = ?", [
-      userId,
-    ]);
+    await connection.execute(
+      "UPDATE users SET status = 1, enter_room_id = ? WHERE user_id = ?",
+      [userId, tableId]
+    );
 
     await connection.commit();
 

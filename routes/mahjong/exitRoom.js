@@ -57,9 +57,10 @@ const exitRoom = async (req, res) => {
     );
 
     // 更新用户状态为0（空闲）
-    await connection.execute("UPDATE users SET status = 0 WHERE user_id = ?", [
-      userId,
-    ]);
+    await connection.execute(
+      "UPDATE users SET status = 0, enter_room_id = NULL WHERE user_id = ?",
+      [userId]
+    );
 
     await connection.commit();
 

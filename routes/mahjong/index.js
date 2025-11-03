@@ -6,6 +6,7 @@ const exitRoom = require("./exitRoom");
 const getConfigList = require("./getConfigList");
 const getStoreList = require("./getStoreList");
 const createRoom = require("./createRoom");
+const userRoomStatus = require("./userRoomStatus");
 const aa = require("./aa");
 
 // 获取麻将房间列表
@@ -20,6 +21,8 @@ router.get("/get-config-list", getConfigList);
 router.get("/get-store-list", getStoreList);
 // 创建房间
 router.post("/create-room", createRoom);
+// 获取用户当前状态
+router.get("/user-room-status", userRoomStatus);
 
 // 测试
 router.get("/aa", aa);
