@@ -1,3 +1,4 @@
+// routes/mahjong/createRoom.js
 const db = require("../../config/database");
 
 const createRoom = async (req, res) => {

@@ -1,3 +1,4 @@
+// routes/mahjong/getUserRoomStatus.js
 const db = require("../../config/database");
 
 const getUserRoomStatus = async (req, res) => {

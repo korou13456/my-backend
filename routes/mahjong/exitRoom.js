@@ -1,3 +1,4 @@
+// routes/mahjong/exitRoom.js
 const db = require("../../config/database");
 
 // 退出房间

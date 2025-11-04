@@ -1,3 +1,4 @@
+// routes/mahjong/index.js
 const db = require("../../config/database");
 const axios = require("axios");
 const crypto = require("crypto");

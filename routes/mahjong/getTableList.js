@@ -1,3 +1,4 @@
+// routes/mahjong/getTableList.js
 const jwt = require("jsonwebtoken");
 const db = require("../../config/database");
 const JWT_SECRET =

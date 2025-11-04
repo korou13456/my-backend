@@ -1,3 +1,4 @@
+// middleware/authMiddleware.js
 const jwt = require("jsonwebtoken");
 const JWT_SECRET =
   "bd57f641483e885e3bdf7f6a3e538e58b2b1eaaafeb70f6dfea4ef30b5921597360c42ffad4b91cf1a8a7a194f04321da97f3ab863af3d90e55494961d107418"; // 跟登录保持一致

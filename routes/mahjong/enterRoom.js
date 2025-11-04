@@ -1,3 +1,4 @@
+// routes/mahjong/enterRoom.js
 const db = require("../../config/database");
 
 // 加入房间/切换房间（合并退出逻辑）

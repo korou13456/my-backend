@@ -1,3 +1,4 @@
+// routes/mahjong/getStoreList.js
 const db = require("../../config/database");
 
 // 获取商家列表接口

@@ -1,3 +1,4 @@
+// routes/mahjong/getUserInformation.js
 const db = require("../../config/database");
 
 const getUserInformation = async (req, res) => {

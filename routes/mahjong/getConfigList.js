@@ -1,3 +1,4 @@
+// routes/mahjong/getConfigList.js
 const db = require("../../config/database");
 
 // 获取配置接口
