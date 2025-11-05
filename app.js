@@ -17,7 +17,11 @@ app.use(cors());
 app.use(express.json());
 
 app.get("/", (req, res) => {
-  res.json({ message: "后端服务运行正常!111" });
+  const isProd = (process.env.NODE_ENV || "development") === "production";
+  const host = isProd
+    ? process.env.PUBLIC_HOST || "8.148.205.183"
+    : "localhost";
+  res.json({ message: "后端服务运行正常!111", host, port });
 });
 
 // 注册活动相关路由
