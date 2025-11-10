@@ -3,6 +3,11 @@ const path = require("path");
 const express = require("express");
 const cors = require("cors");
 const fs = require("fs");
+const {
+  buildSignature,
+  buildMsgSignature,
+  aesDecrypt,
+} = require("./utils/wechatVerify");
 require("dotenv").config({
   path: path.resolve(
     process.cwd(),
@@ -47,6 +52,9 @@ app.get("/", (req, res) => {
   const host = process.env.PUBLIC_HOST;
   res.json({ message: "后端服务运行正常!", host, port });
 });
+
+// 微信消息推送与校验
+app.use("/wechat", require("./routes/wechat"));
 
 // 微信小程序 业务域名验证文件
 app.get("/lJNSP0vVfy.txt", (req, res) => {
