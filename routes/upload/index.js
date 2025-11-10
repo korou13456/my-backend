@@ -46,7 +46,10 @@ router.post("/", upload.single("file"), (req, res) => {
   const host = process.env.PUBLIC_HOST;
   const port = process.env.PORT || 3000;
 
-  const fileUrl = `http://${host}:${port}/uploads/${req.file.filename}`;
+  const baseUrl = process.env.PUBLIC_BASE_URL; // e.g. https://majhongapp.cn
+  const fileUrl = baseUrl
+    ? `${baseUrl}/uploads/${req.file.filename}`
+    : `http://${host}:${port}/uploads/${req.file.filename}`;
 
   res.setHeader("Content-Type", "application/json; charset=utf-8");
   res.json({

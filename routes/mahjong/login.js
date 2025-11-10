@@ -9,6 +9,8 @@ const JWT_SECRET = process.env.JWT_SECRET || "change_me_in_env";
 
 // 生成完整的文件URL
 function getFileUrl(filename) {
+  const baseUrl = process.env.PUBLIC_BASE_URL; // e.g. https://majhongapp.cn
+  if (baseUrl) return `${baseUrl}/uploads/${filename}`;
   const host = process.env.PUBLIC_HOST;
   const port = process.env.PORT || 3000;
   return `http://${host}:${port}/uploads/${filename}`;
