@@ -44,7 +44,10 @@ async function ensureTable() {
 ensureTable().catch(() => {});
 
 function tryParseXmlField(xml, tag) {
-  const reCdata = new RegExp(`<${tag}><!\\[CDATA\\[(.+?)\\]\\]><\\/${tag}>`, "i");
+  const reCdata = new RegExp(
+    `<${tag}><!\\[CDATA\\[(.+?)\\]\\]><\\/${tag}>`,
+    "i"
+  );
   const rePlain = new RegExp(`<${tag}>([^<]+)<\\/${tag}>`, "i");
   const m = xml.match(reCdata) || xml.match(rePlain);
   return m ? m[1].trim() : null;
@@ -91,7 +94,9 @@ function extractMessage(plaintext) {
       picUrl,
       url,
       msgId: msgIdStr ? Number(msgIdStr) : null,
-      createTime: createTimeStr ? Number(createTimeStr) : Math.floor(Date.now() / 1000),
+      createTime: createTimeStr
+        ? Number(createTimeStr)
+        : Math.floor(Date.now() / 1000),
     };
   }
 }
@@ -111,7 +116,7 @@ router.get("/", (req, res) => {
 });
 
 // POST /wechat - 微信消息推送（支持 JSON/XML，安全模式）
-router.post("/", (req, res) => {
+router.post("/", async (req, res) => {
   const token = process.env.WECHAT_TOKEN;
   const encodingAesKey = process.env.WECHAT_ENCODING_AES_KEY;
   if (!token || !encodingAesKey) {
