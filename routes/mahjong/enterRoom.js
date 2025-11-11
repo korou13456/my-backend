@@ -103,6 +103,14 @@ const enterRoom = async (req, res) => {
         for (const user of userRows) {
           if (!user.service_openid) continue;
 
+          const miniAppId = process.env.WX_MINI_APP_ID || "";
+          const miniProgram = miniAppId
+            ? {
+                appid: miniAppId,
+                pagepath: "pages/hall/index",
+              }
+            : null;
+
           await pushMessage(
             "TABLE_SUCCES_USER", // 注意和模板名对应
             user.service_openid,
@@ -115,10 +123,7 @@ const enterRoom = async (req, res) => {
               storePhone: "0594-xxxxxxx",
             },
             "", // 服务号网页跳转链接，不用的话空字符串
-            {
-              appid: "你的小程序appid",
-              pagepath: "pages/hall/index",
-            }
+            miniProgram
           );
         }
       }
