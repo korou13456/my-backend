@@ -96,16 +96,16 @@ const enterRoom = async (req, res) => {
           );
         }
         const [userRows] = await connection.query(
-          `SELECT wxid, nickname FROM users WHERE user_id IN (?)`,
+          `SELECT service_openid, nickname FROM users WHERE user_id IN (?)`,
           [participantIds]
         );
 
         for (const user of userRows) {
-          if (!user.wxid) continue;
+          if (!user.service_openid) continue;
 
           await pushMessage(
             "TABLE_SUCCES_USER", // 注意和模板名对应
-            user.wxid,
+            user.service_openid,
             {
               tableId, // 预约码
               roomTitle: "4人已拼成，准备开局", // 订单名称
