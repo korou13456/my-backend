@@ -4,6 +4,8 @@ const {
   buildMsgSignature,
   aesDecrypt,
 } = require("../../utils/wechatVerify");
+const axios = require("axios");
+const xml2js = require("xml2js");
 
 /**
  * 读取原始文本请求体（兼容未经过 body-parser 的 text/xml）
@@ -36,6 +38,50 @@ async function wechatVerify(req, res) {
     return res.status(200).send(echostr || "");
   }
   return res.status(401).send("signature 校验失败");
+}
+
+let cachedAccessToken = null;
+let tokenExpireTime = 0;
+
+async function getAccessToken() {
+  const now = Date.now();
+  if (cachedAccessToken && now < tokenExpireTime) {
+    return cachedAccessToken;
+  }
+  const appId = process.env.WX_APP_ID;
+  const appSecret = process.env.WX_APP_SECRET;
+  const url = `https://api.weixin.qq.com/cgi-bin/token?grant_type=client_credential&appid=${appId}&secret=${appSecret}`;
+  const res = await axios.get(url);
+  if (res.data.access_token) {
+    cachedAccessToken = res.data.access_token;
+    tokenExpireTime = now + (res.data.expires_in - 300) * 1000; // 提前5分钟刷新
+    return cachedAccessToken;
+  }
+  throw new Error("获取access_token失败：" + JSON.stringify(res.data));
+}
+
+async function getUserInfo(accessToken, openid) {
+  const url = `https://api.weixin.qq.com/cgi-bin/user/info?access_token=${accessToken}&openid=${openid}&lang=zh_CN`;
+  const res = await axios.get(url);
+  if (res.data.errcode) {
+    throw new Error(`微信接口返回错误: ${res.data.errmsg}`);
+  }
+  return res.data;
+}
+
+/**
+ * 读取原始文本请求体（兼容未经过 body-parser 的 text/xml）
+ */
+async function readRawText(req) {
+  if (req.rawBody) return req.rawBody.toString("utf8");
+  if (typeof req.body === "string") return req.body;
+  return await new Promise((resolve, reject) => {
+    let data = "";
+    req.setEncoding("utf8");
+    req.on("data", (chunk) => (data += chunk));
+    req.on("end", () => resolve(data));
+    req.on("error", reject);
+  });
 }
 
 /**
@@ -81,6 +127,29 @@ async function wechatReceive(req, res) {
     }
 
     console.log("[WeChat OA] Decrypted XML:", decryptedXml);
+
+    // 解析 XML
+    const parsed = await xml2js.parseStringPromise(decryptedXml, {
+      explicitArray: false,
+      trim: true,
+    });
+
+    // 事件消息处理
+    const msg = parsed.xml || {};
+    if (msg.MsgType === "event" && msg.Event === "subscribe") {
+      const openid = msg.FromUserName;
+      console.log("用户关注，openid:", openid);
+
+      try {
+        const accessToken = await getAccessToken();
+        const userInfo = await getUserInfo(accessToken, openid);
+        console.log("获取到的用户信息:", userInfo);
+        console.log("用户unionid:", userInfo.unionid || "无unionid");
+      } catch (err) {
+        console.error("获取用户信息失败:", err);
+      }
+    }
+
     return res.status(200).send("success");
   } catch (err) {
     console.error("[WeChat OA] Error handling message:", err);
